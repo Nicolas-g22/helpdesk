@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ customer.name }} - Helpdesk{% endblock %}
+
+{% block body %}
+<p><a href="/customers">← Clients</a></p>
+
+<h1>{{ customer.name }} {% if customer.plan == 'premium' %}<span class="premium">premium</span>{% endif %}</h1>
+<p>{{ customer.email }} · client depuis le {{ customer.createdAt|date('d/m/Y') }}</p>
+
+{% if late > 0 %}<div class="flash flash-error">{{ late }} ticket(s) en retard</div>{% endif %}
+
+<table>
+    <thead><tr><th>#</th><th>Titre</th><th>Statut</th><th>Priorité</th><th>Créé le</th></tr></thead>
+    <tbody>
+    {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td><a href="{{ path('ticket_show', {id: ticket.id}) }}">{{ ticket.title }}</a></td>
+            <td><span class="badge {{ ticket.status|status_class }}">{{ ticket.statusLabel }}</span></td>
+            <td>
+                {% if ticket.priority == 4 %}<span class="prio prio-4">Urgente</span>
+                {% elseif ticket.priority == 3 %}<span class="prio prio-3">Haute</span>
+                {% elseif ticket.priority == 2 %}<span class="prio prio-2">Normale</span>
+                {% else %}<span class="prio prio-1">Basse</span>{% endif %}
+            </td>
+            <td>{{ ticket.createdAt|date('d/m/Y') }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5" class="empty">Aucun ticket.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

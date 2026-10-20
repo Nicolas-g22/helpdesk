@@ -1,0 +1,8 @@
+<form method="post" action="{{ path('technician_switch') }}" class="switcher">
+    <select name="technician_id" onchange="this.form.submit()">
+        <option value="">Non connecté</option>
+        {% for technician in technicians %}
+            <option value="{{ technician.id }}" {% if technician.id == current %}selected{% endif %}>{{ technician.name }}</option>
+        {% endfor %}
+    </select>
+</form>

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau ticket - Helpdesk{% endblock %}
+
+{% block body %}
+<h1>Nouveau ticket</h1>
+
+<form method="post" class="form">
+    <div class="field">
+        <label for="customer_id">Client</label>
+        <select name="customer_id" id="customer_id">
+            <option value="">Choisir un client</option>
+            {% for customer in customers %}
+                <option value="{{ customer.id }}" {% if data.customer_id == customer.id %}selected{% endif %}>{{ customer.name }}{% if customer.plan == 'premium' %} (premium){% endif %}</option>
+            {% endfor %}
+        </select>
+        {% if errors.customer_id is defined %}<p class="error">{{ errors.customer_id }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+        <label for="title">Titre</label>
+        <input type="text" name="title" id="title" value="{{ data.title }}">
+        {% if errors.title is defined %}<p class="error">{{ errors.title }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" rows="8">{{ data.description }}</textarea>
+        {% if errors.description is defined %}<p class="error">{{ errors.description }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+        <label for="priority">Priorité demandée</label>
+        <select name="priority" id="priority">
+            <option value="1" {% if data.priority == 1 %}selected{% endif %}>Basse</option>
+            <option value="2" {% if data.priority == 2 %}selected{% endif %}>Normale</option>
+            <option value="3" {% if data.priority == 3 %}selected{% endif %}>Haute</option>
+            <option value="4" {% if data.priority == 4 %}selected{% endif %}>Urgente</option>
+        </select>
+        {% if errors.priority is defined %}<p class="error">{{ errors.priority }}</p>{% endif %}
+    </div>
+
+    <button type="submit">Créer le ticket</button>
+</form>
+{% endblock %}

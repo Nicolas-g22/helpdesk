@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau client - Helpdesk{% endblock %}
+
+{% block body %}
+<h1>Nouveau client</h1>
+
+<form method="post" class="form">
+    <div class="field">
+        <label for="name">Nom</label>
+        <input type="text" name="name" id="name" value="{{ data.name }}">
+        {% if errors.name is defined %}<p class="error">{{ errors.name }}</p>{% endif %}
+    </div>
+    <div class="field">
+        <label for="email">E-mail</label>
+        <input type="text" name="email" id="email" value="{{ data.email }}">
+        {% if errors.email is defined %}<p class="error">{{ errors.email }}</p>{% endif %}
+    </div>
+    <div class="field">
+        <label for="plan">Offre</label>
+        <select name="plan" id="plan">
+            <option value="basic" {% if data.plan == 'basic' %}selected{% endif %}>Basic</option>
+            <option value="premium" {% if data.plan == 'premium' %}selected{% endif %}>Premium</option>
+        </select>
+        {% if errors.plan is defined %}<p class="error">{{ errors.plan }}</p>{% endif %}
+    </div>
+    <button type="submit">Créer le client</button>
+</form>
+{% endblock %}

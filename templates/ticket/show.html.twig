@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}#{{ ticket.id }} {{ ticket.title }} - Helpdesk{% endblock %}
+
+{% block body %}
+<p><a href="{{ path('ticket_index') }}">← Tickets</a></p>
+
+<div class="page-header">
+    <h1>#{{ ticket.id }} {{ ticket.title }}</h1>
+    <span class="badge {{ ticket.status|status_class }}">{{ ticket.statusLabel }}</span>
+</div>
+
+<div class="ticket">
+    <div class="ticket-main">
+        <div class="description">{{ ticket.description|raw }}</div>
+
+        <h2>Commentaires ({{ ticket.comments|length }})</h2>
+        {% for comment in ticket.comments %}
+            <div class="comment {% if comment.fromCustomer %}comment-customer{% endif %}">
+                <div class="comment-meta"><strong>{{ comment.authorName }}</strong> le {{ comment.createdAt|date('d/m/Y à H:i') }}</div>
+                <div>{{ comment.content|nl2br }}</div>
+            </div>
+        {% else %}
+            <p class="empty">Aucun commentaire.</p>
+        {% endfor %}
+
+        {% if ticket.status != 'closed' %}
+        <form method="post" action="{{ path('ticket_comment', {id: ticket.id}) }}" class="comment-form">
+            <textarea name="content" rows="4" placeholder="Votre commentaire"></textarea>
+            <label><input type="checkbox" name="from_customer" value="1"> Réponse du client</label>
+            <button type="submit">Commenter</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <aside class="ticket-side">
+        <dl>
+            <dt>Client</dt>
+            <dd><a href="{{ path('customer_show', {id: ticket.customer.id}) }}">{{ ticket.customer.name }}</a>{% if ticket.customer.plan == 'premium' %} <span class="premium">premium</span>{% endif %}</dd>
+            <dt>Priorité</dt>
+            <dd>
+                {% if ticket.priority == 4 %}<span class="prio prio-4">Urgente</span>
+                {% elseif ticket.priority == 3 %}<span class="prio prio-3">Haute</span>
+                {% elseif ticket.priority == 2 %}<span class="prio prio-2">Normale</span>
+                {% else %}<span class="prio prio-1">Basse</span>{% endif %}
+            </dd>
+            <dt>Créé le</dt>
+            <dd>{{ ticket.createdAt|date('d/m/Y H:i') }}</dd>
+            <dt>Échéance</dt>
+            <dd {% if ticket.late %}class="late"{% endif %}>{{ due_date|date('d/m/Y H:i') }}</dd>
+            {% if ticket.resolvedAt %}
+            <dt>Résolu le</dt>
+            <dd>{{ ticket.resolvedAt|date('d/m/Y H:i') }}</dd>
+            {% endif %}
+            {% if ticket.closedAt %}
+            <dt>Fermé le</dt>
+            <dd>{{ ticket.closedAt|date('d/m/Y H:i') }}</dd>
+            {% endif %}
+        </dl>
+
+        <form method="post" action="{{ path('ticket_assign', {id: ticket.id}) }}">
+            <label for="technician_id">Assigné à</label>
+            <select name="technician_id" id="technician_id">
+                <option value="">Personne</option>
+                {% for technician in technicians %}
+                    <option value="{{ technician.id }}" {% if ticket.assignee and ticket.assignee.id == technician.id %}selected{% endif %}>{{ technician.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Assigner</button>
+        </form>
+
+        <form method="post" action="{{ path('ticket_status', {id: ticket.id}) }}">
+            {% if ticket.status == 'new' %}
+                <button name="status" value="in_progress">Prendre en charge</button>
+            {% elseif ticket.status == 'in_progress' %}
+                <button name="status" value="resolved">Marquer comme résolu</button>
+            {% elseif ticket.status == 'resolved' %}
+                <button name="status" value="in_progress">Rouvrir</button>
+                <button name="status" value="closed">Fermer</button>
+            {% endif %}
+        </form>
+
+        <p><a href="{{ path('ticket_delete', {id: ticket.id}) }}" class="danger">Supprimer le ticket</a></p>
+    </aside>
+</div>
+{% endblock %}

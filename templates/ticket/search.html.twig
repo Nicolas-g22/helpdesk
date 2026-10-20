@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche - Helpdesk{% endblock %}
+
+{% block body %}
+<h1>Recherche : « {{ q }} »</h1>
+<p><a href="{{ path('ticket_index') }}">← Tous les tickets</a></p>
+
+<table>
+    <thead><tr><th>#</th><th>Titre</th><th>Client</th><th>Statut</th><th>Priorité</th></tr></thead>
+    <tbody>
+    {% for row in results %}
+        <tr>
+            <td>{{ row.id }}</td>
+            <td><a href="/tickets/{{ row.id }}">{{ row.title }}</a></td>
+            <td>{{ row.customer_name }}</td>
+            <td><span class="badge {{ row.status|status_class }}">{{ row.status }}</span></td>
+            <td>{{ row.priority|priority_label }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5" class="empty">Aucun résultat.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

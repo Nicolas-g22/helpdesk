@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Techniciens - Helpdesk{% endblock %}
+
+{% block body %}
+<h1>Techniciens</h1>
+
+<table>
+    <thead><tr><th>Nom</th><th>E-mail</th><th>Tickets ouverts</th><th>Statut</th><th></th></tr></thead>
+    <tbody>
+    {% for technician in technicians %}
+        <tr {% if not technician.active %}class="inactive"{% endif %}>
+            <td>{{ technician.name }}</td>
+            <td>{{ technician.email }}</td>
+            <td>{{ counts[technician.id] }}</td>
+            <td>{{ technician.active ? 'Actif' : 'Inactif' }}</td>
+            <td>
+                <form method="post" action="{{ path('technician_toggle', {id: technician.id}) }}">
+                    <button type="submit">{{ technician.active ? 'Désactiver' : 'Réactiver' }}</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

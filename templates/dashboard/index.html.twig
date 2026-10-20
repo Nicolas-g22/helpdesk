@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Helpdesk{% endblock %}
+
+{% block body %}
+<h1>Tableau de bord</h1>
+
+<div class="stats">
+    <div class="stat"><span class="stat-value">{{ stats.new }}</span> nouveaux</div>
+    <div class="stat"><span class="stat-value">{{ stats.in_progress }}</span> en cours</div>
+    <div class="stat"><span class="stat-value">{{ stats.resolved }}</span> résolus</div>
+    <div class="stat {% if stats.late > 0 %}stat-alert{% endif %}"><span class="stat-value">{{ stats.late }}</span> en retard</div>
+    <div class="stat"><span class="stat-value">{{stats.unassigned}}</span> non assignés</div>
+</div>
+
+{% if app.session.get('technician_id') %}
+<h2>Mes tickets ({{ mine|length }})</h2>
+{% if mine|length == 0 %}
+    <p class="empty">Aucun ticket ouvert.</p>
+{% else %}
+<table>
+    <thead><tr><th>#</th><th>Titre</th><th>Client</th><th>Priorité</th><th>Échéance</th></tr></thead>
+    <tbody>
+    {% for ticket in mine %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td><a href="{{ path('ticket_show', {id: ticket.id}) }}">{{ ticket.title }}</a></td>
+            <td>{{ ticket.customer.name }}</td>
+            <td>
+                {% if ticket.priority == 4 %}<span class="prio prio-4">Urgente</span>
+                {% elseif ticket.priority == 3 %}<span class="prio prio-3">Haute</span>
+                {% elseif ticket.priority == 2 %}<span class="prio prio-2">Normale</span>
+                {% else %}<span class="prio prio-1">Basse</span>{% endif %}
+            </td>
+            <td>{{ ticket|due_date|date('d/m/Y H:i') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endif %}
+
+<h2>Tickets en retard</h2>
+{% if late is empty %}
+    <p class="empty">Aucun ticket en retard.</p>
+{% else %}
+<table>
+    <thead><tr><th>#</th><th>Titre</th><th>Client</th><th>Priorité</th><th>Assigné</th><th>Échéance</th></tr></thead>
+    <tbody>
+    {% for ticket in late %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td><a href="/tickets/{{ ticket.id }}">{{ ticket.title }}</a></td>
+            <td>{{ ticket.customer.name }}{% if ticket.customer.plan == 'premium' %} ★{% endif %}</td>
+            <td>
+                {% if ticket.priority == 4 %}<span class="prio prio-4">Urgente</span>
+                {% elseif ticket.priority == 3 %}<span class="prio prio-3">Haute</span>
+                {% elseif ticket.priority == 2 %}<span class="prio prio-2">Normale</span>
+                {% else %}<span class="prio prio-1">Basse</span>{% endif %}
+            </td>
+            <td>{{ ticket.assignee ? ticket.assignee.name : '-' }}</td>
+            <td>{{ ticket|due_date|date('d/m/Y H:i') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

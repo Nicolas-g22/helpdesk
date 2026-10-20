@@ -1,0 +1,122 @@
+:root {
+    --bg: #f5f6f8;
+    --surface: #fff;
+    --text: #1f2933;
+    --muted: #6b7280;
+    --border: #e1e4e8;
+    --primary: #2563eb;
+    --danger: #dc2626;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 32px;
+    background: #111827;
+}
+.topbar a { color: #e5e7eb; }
+.topbar .brand { font-weight: 700; font-size: 18px; color: #fff; }
+.topbar nav { display: flex; gap: 16px; flex: 1; }
+
+main { max-width: 1100px; margin: 0 auto; padding: 24px 32px; }
+
+h1 small { color: var(--muted); font-weight: 400; }
+
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+
+.button, button {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid var(--primary);
+    border-radius: 6px;
+    background: var(--primary);
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+.button:hover { text-decoration: none; opacity: .9; }
+
+input, select, textarea {
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+}
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+th { background: #f9fafb; font-weight: 600; }
+tr.late td:first-child { border-left: 3px solid var(--danger); }
+tr.inactive { color: var(--muted); }
+
+.empty { color: var(--muted); font-style: italic; }
+.danger { color: var(--danger); }
+.late { color: var(--danger); font-weight: 600; }
+
+.flash { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; }
+.flash-success { background: #dcfce7; color: #166534; }
+.flash-error { background: #fee2e2; color: #991b1b; }
+
+.badge { padding: 2px 8px; border-radius: 999px; font-size: 13px; }
+.badge-new { background: #dbeafe; color: #1e40af; }
+.badge-progress { background: #fef3c7; color: #92400e; }
+.badge-resolved { background: #dcfce7; color: #166534; }
+.badge-closed { background: #e5e7eb; color: #374151; }
+
+.prio { font-weight: 600; }
+.prio-1 { color: var(--muted); }
+.prio-2 { color: var(--text); }
+.prio-3 { color: #c2410c; }
+.prio-4 { color: var(--danger); }
+
+.premium { padding: 1px 6px; border-radius: 4px; background: #fde68a; color: #78350f; font-size: 12px; }
+
+.stats { display: flex; gap: 16px; margin-bottom: 24px; }
+.stat { flex: 1; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.stat-value { display: block; font-size: 28px; font-weight: 700; }
+.stat-alert .stat-value { color: var(--danger); }
+
+.filters { display: flex; gap: 8px; margin-bottom: 16px; }
+.filters input[type=search] { flex: 1; }
+
+.pagination { display: flex; gap: 8px; }
+
+.ticket { display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+.description { padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.ticket-side { padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.ticket-side dt { color: var(--muted); font-size: 13px; }
+.ticket-side dd { margin: 0 0 12px; }
+.ticket-side form { margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.ticket-side label { width: 100%; color: var(--muted); font-size: 13px; }
+
+.comment { padding: 12px; margin-bottom: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.comment-customer { border-left: 3px solid var(--primary); }
+.comment-meta { color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+.comment-form { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.comment-form textarea { width: 100%; }
+
+.form { max-width: 600px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-weight: 600; margin-bottom: 4px; }
+.field input, .field textarea, .field select { width: 100%; }
+.error { color: var(--danger); margin: 4px 0 0; }

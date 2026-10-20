@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Helpdesk{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🎫</text></svg>">
+        {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
+    </head>
+    <body>
+        <header class="topbar">
+            <a href="{{ path('dashboard') }}" class="brand">Helpdesk</a>
+            <nav>
+                <a href="{{ path('dashboard') }}">Tableau de bord</a>
+                <a href="{{ path('ticket_index') }}">Tickets</a>
+                <a href="/customers">Clients</a>
+                <a href="/technicians">Techniciens</a>
+            </nav>
+            {{ render(controller('App\\Controller\\TechnicianController::switcher')) }}
+        </header>
+
+        <main>
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{type}}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
+    </body>
+</html>

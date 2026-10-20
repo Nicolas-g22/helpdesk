@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients - Helpdesk{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Clients</h1>
+    <a href="{{ path('customer_new') }}" class="button">Nouveau client</a>
+</div>
+
+<table>
+    <thead><tr><th>Nom</th><th>E-mail</th><th>Offre</th><th>Tickets ouverts</th><th>Total</th></tr></thead>
+    <tbody>
+    {% for row in rows %}
+        <tr>
+            <td><a href="{{ path('customer_show', {id: row.customer.id}) }}">{{ row.customer.name }}</a></td>
+            <td>{{ row.customer.email }}</td>
+            <td>{% if row.customer.plan == 'premium' %}<span class="premium">premium</span>{% else %}basic{% endif %}</td>
+            <td>{{ row.open }}</td>
+            <td>{{ row.total }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tickets - Helpdesk{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Tickets <small>({{ total }})</small></h1>
+    <a href="{{ path('ticket_new') }}" class="button">Nouveau ticket</a>
+</div>
+
+<form method="get" class="filters">
+    <input type="search" name="q" placeholder="Rechercher...">
+    <select name="status">
+        <option value="">Tous les statuts</option>
+        <option value="new" {% if status == 'new' %}selected{% endif %}>Nouveau</option>
+        <option value="in_progress" {% if status == 'in_progress' %}selected{% endif %}>En cours</option>
+        <option value="resolved" {% if status == 'resolved' %}selected{% endif %}>Résolu</option>
+        <option value="closed" {% if status == 'closed' %}selected{% endif %}>Fermé</option>
+    </select>
+    <select name="priority">
+        <option value="">Toutes les priorités</option>
+        {% for p in [4, 3, 2, 1] %}
+            <option value="{{ p }}" {% if priority == p %}selected{% endif %}>{{ p|priority_label }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filtrer</button>
+</form>
+
+<table>
+    <thead>
+        <tr><th>#</th><th>Titre</th><th>Client</th><th>Statut</th><th>Priorité</th><th>Assigné</th><th>Créé le</th><th></th></tr>
+    </thead>
+    <tbody>
+    {% for ticket in tickets %}
+        <tr {% if ticket.late %}class="late"{% endif %}>
+            <td>{{ ticket.id }}</td>
+            <td><a href="{{ path('ticket_show', {id: ticket.id}) }}">{{ ticket.title }}</a></td>
+            <td>{{ticket.customer.name}}{% if ticket.customer.plan == 'premium' %} ★{% endif %}</td>
+            <td><span class="badge {{ ticket.status|status_class }}">{{ ticket.statusLabel }}</span></td>
+            <td>
+                {% if ticket.priority == 4 %}<span class="prio prio-4">Urgente</span>
+                {% elseif ticket.priority == 3 %}<span class="prio prio-3">Haute</span>
+                {% elseif ticket.priority == 2 %}<span class="prio prio-2">Normale</span>
+                {% else %}<span class="prio prio-1">Basse</span>{% endif %}
+            </td>
+            <td>{{ ticket.assignee ? ticket.assignee.name : '-' }}</td>
+            <td>{{ ticket.createdAt|date('d/m/Y H:i') }}</td>
+            <td><a href="{{ path('ticket_delete', {id: ticket.id}) }}" class="danger">Supprimer</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="8" class="empty">Aucun ticket.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if pages > 1 %}
+<div class="pagination">
+    {% for i in 1..pages %}
+        {% if i == page %}
+            <strong>{{ i }}</strong>
+        {% else %}
+            <a href="?page={{ i }}&status={{ status }}&priority={{ priority }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
