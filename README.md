@@ -11,7 +11,7 @@ Application de gestion des demandes de support : les clients ouvrent des tickets
 ## Installation
 
 ```bash
-git clone <url du dépôt> helpdesk
+git clone https://github.com/iia-laval/helpdesk.git
 cd helpdesk
 composer install
 php bin/console doctrine:migrations:migrate -n
